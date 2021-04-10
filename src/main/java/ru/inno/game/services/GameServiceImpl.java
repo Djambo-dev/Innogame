@@ -32,7 +32,7 @@ public class GameServiceImpl implements GameService {
     private Player checkIfExists(String ip, String playerNickname) {
         Player player = playersRepository.findByNickname(playerNickname);
         if (player == null) {
-            player = new Player(ip, playerNickname, 0, 0, 0);
+            player = new Player(playerNickname, ip, 0, 0, 0);
             playersRepository.save(player);
         } else {
             player.setIp(ip);
@@ -63,7 +63,9 @@ public class GameServiceImpl implements GameService {
     public StatisticDto finishGame(Long gameId) {
         Game game = gamesRepository.findById(gameId);
         Player playerOne = playersRepository.findByNickname(game.getFirstPlayer().getName());
+
         Player playerTwo = playersRepository.findByNickname(game.getSecondPlayer().getName());
+
         String playerWinner = gameWinner(game);
         StatisticDto statisticDto = new StatisticDto(game.getId(), playerOne.getName(), playerTwo.getName(), game.getShotsFromFirstPlayer(), game.getShotsFromSecondPlayer(), playerOne.getScore(), playerTwo.getScore(), playerWinner, game.getDateTime().getSecond());
 
@@ -71,16 +73,20 @@ public class GameServiceImpl implements GameService {
     }
     private String gameWinner(Game game){
         if(game.getShotsFromFirstPlayer() > game.getShotsFromSecondPlayer()){
-            game.getFirstPlayer().setMaxWinsCount(game.getFirstPlayer().getMaxWinsCount() + 1);
-            game.getSecondPlayer().setMinLosesCount(game.getSecondPlayer().getMinLosesCount() + 1);
-            playersRepository.update(game.getFirstPlayer());
-            playersRepository.update(game.getSecondPlayer());
+            Player playerOne = playersRepository.findByNickname(game.getFirstPlayer().getName());
+            playerOne.setMaxWinsCount(playerOne.getMaxWinsCount() + 1);
+            Player playerTwo = playersRepository.findByNickname(game.getSecondPlayer().getName());
+            playerTwo.setMinLosesCount(playerTwo.getMinLosesCount() + 1);
+            playersRepository.update(playerOne);
+            playersRepository.update(playerTwo);
             return game.getFirstPlayer().getName();
         } else if(game.getShotsFromFirstPlayer() < game.getShotsFromSecondPlayer()){
-            game.getSecondPlayer().setMaxWinsCount(game.getSecondPlayer().getMaxWinsCount() + 1);
-            game.getFirstPlayer().setMinLosesCount(game.getFirstPlayer().getMinLosesCount() + 1);
-            playersRepository.update(game.getFirstPlayer());
-            playersRepository.update(game.getSecondPlayer());
+            Player playerOne = playersRepository.findByNickname(game.getFirstPlayer().getName());
+            playerOne.setMinLosesCount(playerOne.getMinLosesCount() + 1);
+            Player playerTwo = playersRepository.findByNickname(game.getSecondPlayer().getName());
+            playerTwo.setMaxWinsCount(playerTwo.getMaxWinsCount() + 1);
+            playersRepository.update(playerOne);
+            playersRepository.update(playerTwo);
             return game.getSecondPlayer().getName();
         } else
             return "Ничья";

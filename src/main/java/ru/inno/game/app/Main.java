@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        PlayersRepository playersRepository = new PlayersRepositoryMapImpl();
+        PlayersRepository playersRepository = new PlayersRepositoryFilesImpl();
         GamesRepository gamesRepository = new GamesRepositoryListImpl();
         ShotsRepository shotsRepository = new ShotsRepositoryListImpl();
         GameService gameService = new GameServiceImpl(playersRepository, gamesRepository, shotsRepository);
@@ -40,7 +40,7 @@ public class Main {
         StatisticDto statistic = gameService.finishGame(gameId);
         System.out.println(statistic);
 
-
+/*
         first = scanner.nextLine();
         second = scanner.nextLine();
         gameId = gameService.startGame("127.0.0.1", "127.0.0.2", first, second);
@@ -87,7 +87,7 @@ public class Main {
             i3++;
         }
         statistic = gameService.finishGame(gameId);
-        System.out.println(statistic);
+        System.out.println(statistic);*/
         int x = 100;
     }
 }
