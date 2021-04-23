@@ -1,32 +1,30 @@
 package ru.inno.game.models;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.StringJoiner;
 
+
+@Data
 @AllArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode
+@NoArgsConstructor
+@Builder
 public class Shot {
-    //private Long id;
+
+    private Long id;
     private LocalDateTime shotTime;
     //private boolean isHit;
     private Game game;
     private Player shooter;
     private Player target;
 
-    @Override
-    public String toString() {
-        return new StringJoiner(", ", Shot.class.getSimpleName() + "[", "]")
-                .add("shotTime=" + shotTime)
-                .add("game=" + game.getId())
-                .add("shooter=" + shooter.getName())
-                .add("target=" + target.getName())
-                .toString();
+    public Shot(LocalDateTime shotTime, Game game, Player shooter, Player target) {
+        this.shotTime = shotTime;
+        this.game = game;
+        this.shooter = shooter;
+        this.target = target;
     }
+
+
 }

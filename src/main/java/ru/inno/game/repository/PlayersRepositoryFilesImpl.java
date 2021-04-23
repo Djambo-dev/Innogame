@@ -48,9 +48,9 @@ public class PlayersRepositoryFilesImpl implements PlayersRepository {
                     .append("#")
                     .append(player.getScore())
                     .append("#")
-                    .append(player.getMaxWinsCount())
+                    .append(player.getWinsCount())
                     .append("#")
-                    .append(player.getMinLosesCount())
+                    .append(player.getLosesCount())
                     .append("\n");
             br.write(String.valueOf(sb));
         } catch (IOException e) {
@@ -92,9 +92,9 @@ public class PlayersRepositoryFilesImpl implements PlayersRepository {
                         .append("#")
                         .append(value.getScore())
                         .append("#")
-                        .append(value.getMaxWinsCount())
+                        .append(value.getWinsCount())
                         .append("#")
-                        .append(value.getMinLosesCount())
+                        .append(value.getLosesCount())
                         .append("\n");
                 br.write(String.valueOf(sb));
             }

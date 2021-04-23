@@ -1,6 +1,9 @@
 package ru.inno.game.services;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.inno.game.dto.StatisticDto;
 import ru.inno.game.models.Game;
 import ru.inno.game.models.Player;
@@ -11,7 +14,10 @@ import ru.inno.game.repository.ShotsRepository;
 
 import java.time.LocalDateTime;
 
+@Data
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class GameServiceImpl implements GameService {
 
     private PlayersRepository playersRepository;
@@ -74,17 +80,17 @@ public class GameServiceImpl implements GameService {
     private String gameWinner(Game game){
         if(game.getShotsFromFirstPlayer() > game.getShotsFromSecondPlayer()){
             Player playerOne = playersRepository.findByNickname(game.getFirstPlayer().getName());
-            playerOne.setMaxWinsCount(playerOne.getMaxWinsCount() + 1);
+            playerOne.setWinsCount(playerOne.getWinsCount() + 1);
             Player playerTwo = playersRepository.findByNickname(game.getSecondPlayer().getName());
-            playerTwo.setMinLosesCount(playerTwo.getMinLosesCount() + 1);
+            playerTwo.setLosesCount(playerTwo.getLosesCount() + 1);
             playersRepository.update(playerOne);
             playersRepository.update(playerTwo);
             return game.getFirstPlayer().getName();
         } else if(game.getShotsFromFirstPlayer() < game.getShotsFromSecondPlayer()){
             Player playerOne = playersRepository.findByNickname(game.getFirstPlayer().getName());
-            playerOne.setMinLosesCount(playerOne.getMinLosesCount() + 1);
+            playerOne.setLosesCount(playerOne.getLosesCount() + 1);
             Player playerTwo = playersRepository.findByNickname(game.getSecondPlayer().getName());
-            playerTwo.setMaxWinsCount(playerTwo.getMaxWinsCount() + 1);
+            playerTwo.setWinsCount(playerTwo.getWinsCount() + 1);
             playersRepository.update(playerOne);
             playersRepository.update(playerTwo);
             return game.getSecondPlayer().getName();

@@ -2,18 +2,26 @@ package ru.inno.game.models;
 
 import lombok.*;
 
+
+@Data
 @AllArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode
-@ToString
+@NoArgsConstructor
+@Builder
 public class Player {
-    //private Long id;
+
+    private Long id = 0L;
     private String name;
     private String ip;
     private Integer score;
-    private Integer maxWinsCount;
-    private Integer minLosesCount;
+    private Integer winsCount;
+    private Integer losesCount;
 
-
+    public Player(String name, String ip, Integer score, Integer winsCount, Integer losesCount) {
+        ++id;
+        this.name = name;
+        this.ip = ip;
+        this.score = score;
+        this.winsCount = winsCount;
+        this.losesCount = losesCount;
+    }
 }

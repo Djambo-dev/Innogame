@@ -1,18 +1,19 @@
 package ru.inno.game.models;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.StringJoiner;
 
 
-@Getter
-@Setter
-@EqualsAndHashCode
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Game {
+
+
     private Long id = 0L;
 
     private LocalDateTime dateTime;
@@ -32,16 +33,5 @@ public class Game {
         this.gameDurationInSeconds = gameDurationInSeconds;
     }
 
-    @Override
-    public String toString() {
-        return new StringJoiner(", ", Game.class.getSimpleName() + "[", "]")
-                .add("id=" + id)
-                .add("dateTime=" + dateTime)
-                .add("firstPlayer=" + firstPlayer.getName())
-                .add("secondPlayer=" + secondPlayer.getName())
-                .add("shotsFromFirstPlayer=" + shotsFromFirstPlayer)
-                .add("shotsFromSecondPlayer=" + shotsFromSecondPlayer)
-                .add("gameDurationInSeconds=" + gameDurationInSeconds)
-                .toString();
-    }
+
 }
