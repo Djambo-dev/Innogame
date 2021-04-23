@@ -24,24 +24,22 @@ public class ShotsRepositoryDataBaseImpl implements ShotsRepository {
     //Works
     @Override
     public void save(Shot shot) {
-
-
-        ResultSet generatedId;
-        try(Connection connection = dataSource.getConnection();
-            PreparedStatement statement = connection.prepareStatement(SQL_INSERT_SHOT, Statement.RETURN_GENERATED_KEYS)){
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL_INSERT_SHOT, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, shot.getShotTime().toString());
             statement.setLong(2, shot.getGame().getId());
             statement.setLong(3, shot.getShooter().getId());
             statement.setLong(4, shot.getTarget().getId());
             int affectedRows = statement.executeUpdate();
-            if(affectedRows != 1){
+            if (affectedRows != 1) {
                 throw new SQLException("Can't insert data");
             }
-            generatedId = statement.getGeneratedKeys();
-            if(generatedId.next()){
-                shot.setId(generatedId.getLong("id"));
+            try (ResultSet generatedId = statement.getGeneratedKeys()) {
+                if (generatedId.next()) {
+                    shot.setId(generatedId.getLong("id"));
+                }
             }
-        } catch (SQLException e){
+        } catch (SQLException e) {
             throw new IllegalStateException(e);
         }
 

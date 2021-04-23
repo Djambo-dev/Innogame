@@ -1,5 +1,7 @@
 package ru.inno.game.app;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import ru.inno.game.dto.StatisticDto;
 import ru.inno.game.models.Game;
 import ru.inno.game.models.Player;
@@ -22,10 +24,15 @@ public class Main {
         final String JDBC_URL = "jdbc:postgresql://localhost:5432/Innogame";
         final String JDBC_USER = "postgres";
         final String JDBC_PASSWORD = "qwerty";
-        DataSource dataSource = new CustomDataSource(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
-
-
-        PlayersRepository playersRepository = new PlayersRepositoryDataBaseImpl(dataSource);
+        /*HikariConfig hikariConfig = new HikariConfig();
+        hikariConfig.setJdbcUrl(JDBC_URL);
+        hikariConfig.setDriverClassName("org.postgresql.Driver");
+        hikariConfig.setUsername(JDBC_USER);
+        hikariConfig.setPassword(JDBC_PASSWORD);
+        hikariConfig.setMaximumPoolSize(20);
+        DataSource dataSource = new HikariDataSource(hikariConfig);*/
+        DataSource dataSource = new CustomDataSource(JDBC_URL,JDBC_USER,JDBC_PASSWORD);
+        /*PlayersRepository playersRepository = new PlayersRepositoryDataBaseImpl(dataSource);
         Player playerOne = new Player("Bob", "222", 3, 1,0);
 
          Player playerTwo = new Player("Alex", "1111", 6, 0,1);
@@ -39,9 +46,9 @@ public class Main {
         Player playerFind = playersRepository.findByNickname("Alex");
         System.out.println(playerFind.getScore());
         Game gameTest = gamesRepository.findById(1L);
-        System.out.println(gameTest);
-        /*PlayersRepository playersRepository = new PlayersRepositoryMapImpl();
-        GamesRepository gamesRepository = new GamesRepositoryListImpl();
+        System.out.println(gameTest);*/
+        PlayersRepository playersRepository = new PlayersRepositoryDataBaseImpl(dataSource);
+        GamesRepository gamesRepository = new GamesRepositoryDataBaseImpl(dataSource);
         ShotsRepository shotsRepository = new ShotsRepositoryDataBaseImpl(dataSource);
         GameService gameService = new GameServiceImpl(playersRepository, gamesRepository, shotsRepository);
         Scanner scanner = new Scanner(System.in);
@@ -69,8 +76,6 @@ public class Main {
         }
         StatisticDto statistic = gameService.finishGame(gameId);
         System.out.println(statistic);
-*/
-/*
         first = scanner.nextLine();
         second = scanner.nextLine();
         gameId = gameService.startGame("127.0.0.1", "127.0.0.2", first, second);
@@ -117,7 +122,7 @@ public class Main {
             i3++;
         }
         statistic = gameService.finishGame(gameId);
-        System.out.println(statistic);*/
+        System.out.println(statistic);
         int x = 100;
     }
 }
