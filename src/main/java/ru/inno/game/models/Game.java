@@ -12,17 +12,13 @@ import java.util.StringJoiner;
 @NoArgsConstructor
 @Builder
 public class Game {
-
-
     private Long id = 0L;
-
     private LocalDateTime dateTime;
     private Player firstPlayer;
     private Player secondPlayer;
     private Integer shotsFromFirstPlayer;
     private Integer shotsFromSecondPlayer;
     private Long gameDurationInSeconds;
-
     public Game(LocalDateTime dateTime, Player firstPlayer, Player secondPlayer, Integer shotsFromFirstPlayer, Integer shotsFromSecondPlayer, Long gameDurationInSeconds) {
         ++id;
         this.dateTime = dateTime;
@@ -32,6 +28,4 @@ public class Game {
         this.shotsFromSecondPlayer = shotsFromSecondPlayer;
         this.gameDurationInSeconds = gameDurationInSeconds;
     }
-
-
 }

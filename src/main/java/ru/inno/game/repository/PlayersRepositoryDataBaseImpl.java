@@ -11,7 +11,6 @@ import java.sql.*;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder
 public class PlayersRepositoryDataBaseImpl implements PlayersRepository {
 

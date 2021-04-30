@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder
 public class GamesRepositoryDataBaseImpl implements GamesRepository {
 
@@ -26,7 +25,6 @@ public class GamesRepositoryDataBaseImpl implements GamesRepository {
     private final String SQL_FIND_PLAYER_BY_ID = "select * from player where id = ?";
     //language=sql
     private final String SQL_UPDATE_GAME = "update game set dateTime = ?, player_first = ?, player_second = ?, player_first_shots_count = ?, player_second_shots_count = ?, game_time_duration = ? where id = ?";
-
     @Override
     public void update(Game game) {
         try (Connection connection = dataSource.getConnection();
@@ -38,7 +36,6 @@ public class GamesRepositoryDataBaseImpl implements GamesRepository {
         }
 
     }
-
     private void insertData(Game game, PreparedStatement preparedStatement) throws SQLException {
         preparedStatement.setString(1, game.getDateTime().toString());
         preparedStatement.setLong(2, game.getFirstPlayer().getId());

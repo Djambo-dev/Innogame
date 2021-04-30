@@ -12,7 +12,6 @@ import java.util.Collection;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder
 public class ShotsRepositoryDataBaseImpl implements ShotsRepository {
 

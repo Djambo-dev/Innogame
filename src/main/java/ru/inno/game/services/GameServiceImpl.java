@@ -16,8 +16,6 @@ import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
-@Builder
 public class GameServiceImpl implements GameService {
 
     private PlayersRepository playersRepository;
@@ -27,7 +25,7 @@ public class GameServiceImpl implements GameService {
     @Override
     public Long startGame(String firstIp, String secondIp, String firstPlayerNickname, String secondPlayerNickname) {
 
-
+        System.out.println("ПОЛУЧИЛИ " + firstIp + " " + secondIp + " " + firstPlayerNickname + " " + secondPlayerNickname);
         Player first = checkIfExists(firstIp, firstPlayerNickname);
         Player second = checkIfExists(secondIp, secondPlayerNickname);
         Game game = new Game(LocalDateTime.now(), first, second, 0, 0, 0L);

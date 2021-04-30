@@ -24,14 +24,14 @@ public class Main {
         final String JDBC_URL = "jdbc:postgresql://localhost:5432/Innogame";
         final String JDBC_USER = "postgres";
         final String JDBC_PASSWORD = "qwerty";
-        /*HikariConfig hikariConfig = new HikariConfig();
+        HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(JDBC_URL);
         hikariConfig.setDriverClassName("org.postgresql.Driver");
         hikariConfig.setUsername(JDBC_USER);
         hikariConfig.setPassword(JDBC_PASSWORD);
         hikariConfig.setMaximumPoolSize(20);
-        DataSource dataSource = new HikariDataSource(hikariConfig);*/
-        DataSource dataSource = new CustomDataSource(JDBC_URL,JDBC_USER,JDBC_PASSWORD);
+        DataSource dataSource = new HikariDataSource(hikariConfig);
+        //DataSource dataSource = new CustomDataSource(JDBC_URL,JDBC_USER,JDBC_PASSWORD);
         /*PlayersRepository playersRepository = new PlayersRepositoryDataBaseImpl(dataSource);
         Player playerOne = new Player("Bob", "222", 3, 1,0);
 

@@ -8,14 +8,12 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class Player {
-
     private Long id = 0L;
     private String name;
     private String ip;
     private Integer score;
     private Integer winsCount;
     private Integer losesCount;
-
     public Player(String name, String ip, Integer score, Integer winsCount, Integer losesCount) {
         ++id;
         this.name = name;
