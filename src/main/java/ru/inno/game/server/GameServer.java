@@ -21,12 +21,13 @@ import java.util.concurrent.locks.ReentrantLock;
 public class GameServer {
 
     private PlayerThread firstPlayer;
-
     private PlayerThread secondPlayer;
-
+    private Long gameId;
+    private Long startTimeMills;
     private ServerSocket socketPlayer;
     private GameService gameService;
     private boolean isGameStarted = false;
+    private boolean isGameInProcess = true;
     private Lock lock = new ReentrantLock();
     public GameServer(GameService gameService){
         this.gameService = gameService;
@@ -80,7 +81,7 @@ public class GameServer {
         }
         @Override
         public void run() {
-            while (true) {
+            while (isGameInProcess) {
                 String messageFromPlayer;
                 try {
                     messageFromPlayer = fromPlayer.readLine();
@@ -88,17 +89,31 @@ public class GameServer {
                     throw new IllegalStateException(e);
                 }
                 if (messageFromPlayer != null) {
-                    if(messageFromPlayer.startsWith("name: ")){
+                    if(isMessageForNickname(messageFromPlayer)){
                         resolveNickname(messageFromPlayer);
+                    } else if(isMessageForExit(messageFromPlayer) && isGameInProcess){
+                       lock.lock();
+                       gameService.finishGame(gameId, (System.currentTimeMillis() - startTimeMills) / 1000);
+                       isGameInProcess = false;
+                       lock.unlock();
                     }
                 }
                 lock.lock();
                 if(isGameReadyForStart()){
-                    gameService.startGame(firstPlayer.getIp(), secondPlayer.getIp(), firstPlayer.getPlayerNickname(), secondPlayer.getPlayerNickname());
+                    gameId = gameService.startGame(firstPlayer.getIp(), secondPlayer.getIp(), firstPlayer.getPlayerNickname(), secondPlayer.getPlayerNickname());
+                    startTimeMills = System.currentTimeMillis();
                     isGameStarted = true;
                 }
                 lock.unlock();
             }
+        }
+
+        private boolean isMessageForExit(String messageFromPlayer) {
+            return messageFromPlayer.equals("exit");
+        }
+
+        private boolean isMessageForNickname(String messageFromPlayer) {
+            return messageFromPlayer.startsWith("name: ");
         }
 
         private boolean isGameReadyForStart() {

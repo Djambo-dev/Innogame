@@ -1,15 +1,5 @@
 package ru.inno.game.dto;
 
-import lombok.AllArgsConstructor;
-import ru.inno.game.models.Player;
-import ru.inno.game.repository.GamesRepository;
-import ru.inno.game.repository.PlayersRepository;
-import ru.inno.game.repository.ShotsRepository;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.StringJoiner;
-
 public class StatisticDto {
     private Long gameId;
     private String firstPlayerNickname;
@@ -19,9 +9,9 @@ public class StatisticDto {
     private Integer firstPlayerScore;
     private Integer secondPlayerScore;
     private String playerWinner;
-    private Integer localDateTime;
+    private Long gameTimeInSeconds;
 
-    public StatisticDto(Long gameId, String firstPlayer, String secondPlayer, Integer shotsCountFromFirst, Integer shotsCountFromSecond, Integer firstPlayerScore, Integer secondPlayerScore, String playerWinner, Integer localDateTime) {
+    public StatisticDto(Long gameId, String firstPlayer, String secondPlayer, Integer shotsCountFromFirst, Integer shotsCountFromSecond, Integer firstPlayerScore, Integer secondPlayerScore, String playerWinner, Long gameTimeInSeconds) {
         this.gameId = gameId;
         this.firstPlayerNickname = firstPlayer;
         this.secondPlayerNickname = secondPlayer;
@@ -30,7 +20,7 @@ public class StatisticDto {
         this.firstPlayerScore = firstPlayerScore;
         this.secondPlayerScore = secondPlayerScore;
         this.playerWinner = playerWinner;
-        this.localDateTime = localDateTime;
+        this.gameTimeInSeconds = gameTimeInSeconds;
     }
 
 
@@ -42,6 +32,6 @@ public class StatisticDto {
                         "Игрок 1: " + firstPlayerNickname + ", попаданий - " + shotsCountFromFirst + ", всего очков - " + firstPlayerScore + "\n" +
                         "Игрок 2: " + secondPlayerNickname + ", попаданий - " + shotsCountFromSecond + ", всего очков - " + secondPlayerScore + "\n" +
                         "Победа: " + playerWinner + "\n" +
-                        "Игра длилась: " + localDateTime + " секунд";
+                        "Игра длилась: " + gameTimeInSeconds + " секунд";
     }
 }

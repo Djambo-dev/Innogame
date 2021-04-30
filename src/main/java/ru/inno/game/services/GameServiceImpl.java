@@ -1,9 +1,7 @@
 package ru.inno.game.services;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import ru.inno.game.dto.StatisticDto;
 import ru.inno.game.models.Game;
 import ru.inno.game.models.Player;
@@ -64,18 +62,20 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public StatisticDto finishGame(Long gameId) {
+    public StatisticDto finishGame(Long gameId, Long seconds) {
         Game game = gamesRepository.findById(gameId);
+        game.setGameDurationInSeconds(seconds);
+        gamesRepository.update(game);
         Player playerOne = playersRepository.findByNickname(game.getFirstPlayer().getName());
 
         Player playerTwo = playersRepository.findByNickname(game.getSecondPlayer().getName());
 
-        String playerWinner = gameWinner(game);
-        StatisticDto statisticDto = new StatisticDto(game.getId(), playerOne.getName(), playerTwo.getName(), game.getShotsFromFirstPlayer(), game.getShotsFromSecondPlayer(), playerOne.getScore(), playerTwo.getScore(), playerWinner, game.getDateTime().getSecond());
+        String playerWinner = checkGameWinner(game);
+        StatisticDto statisticDto = new StatisticDto(game.getId(), playerOne.getName(), playerTwo.getName(), game.getShotsFromFirstPlayer(), game.getShotsFromSecondPlayer(), playerOne.getScore(), playerTwo.getScore(), playerWinner, game.getGameDurationInSeconds());
 
         return statisticDto;
     }
-    private String gameWinner(Game game){
+    private String checkGameWinner(Game game){
         if(game.getShotsFromFirstPlayer() > game.getShotsFromSecondPlayer()){
             Player playerOne = playersRepository.findByNickname(game.getFirstPlayer().getName());
             playerOne.setWinsCount(playerOne.getWinsCount() + 1);

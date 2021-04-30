@@ -74,9 +74,9 @@ public class Main {
             target = temp;
             i1++;
         }
-        StatisticDto statistic = gameService.finishGame(gameId);
+     /*   StatisticDto statistic = gameService.finishGame(gameId);
         System.out.println(statistic);
-
+*/
         first = scanner.nextLine();
         second = scanner.nextLine();
         gameId = gameService.startGame("127.0.0.1", "127.0.0.2", first, second);
@@ -98,8 +98,8 @@ public class Main {
             target = temp;
             i2++;
         }
-        statistic = gameService.finishGame(gameId);
-        System.out.println(statistic);
+        /*statistic = gameService.finishGame(gameId);
+        System.out.println(statistic);*/
 
         first = scanner.nextLine();
         second = scanner.nextLine();
@@ -122,8 +122,8 @@ public class Main {
             target = temp;
             i3++;
         }
-        statistic = gameService.finishGame(gameId);
-        System.out.println(statistic);
+       /* statistic = gameService.finishGame(gameId);
+        System.out.println(statistic);*/
 
     }
 }

@@ -23,5 +23,5 @@ public interface GameService {
      */
     void shot(Long gameId, String shooterNickname, String targetNickname);
 
-    StatisticDto finishGame(Long gameId);
+    StatisticDto finishGame(Long gameId, Long seconds);
 }
