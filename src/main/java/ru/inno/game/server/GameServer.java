@@ -12,6 +12,9 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 @Data
 @AllArgsConstructor
 @Builder
@@ -24,6 +27,7 @@ public class GameServer {
     private ServerSocket socketPlayer;
     private GameService gameService;
     private boolean isGameStarted = false;
+    private Lock lock = new ReentrantLock();
     public GameServer(GameService gameService){
         this.gameService = gameService;
     }
@@ -61,13 +65,11 @@ public class GameServer {
     @AllArgsConstructor
     @NoArgsConstructor
     private class PlayerThread extends Thread {
-
         private PrintWriter toPlayer;
         private BufferedReader fromPlayer;
         private String playerNickname;
         private String ip;
         public PlayerThread(Socket socketPlayer) {
-
             try {
                 this.toPlayer = new PrintWriter(socketPlayer.getOutputStream(), true);
                 this.fromPlayer = new BufferedReader(new InputStreamReader(socketPlayer.getInputStream()));
@@ -75,12 +77,9 @@ public class GameServer {
             } catch (IOException e) {
                 throw new IllegalStateException(e);
             }
-
         }
-
         @Override
         public void run() {
-
             while (true) {
                 String messageFromPlayer;
                 try {
@@ -90,27 +89,34 @@ public class GameServer {
                 }
                 if (messageFromPlayer != null) {
                     if(messageFromPlayer.startsWith("name: ")){
-                        if(meFirst()){
-                            firstPlayer.playerNickname = messageFromPlayer.substring(6);
-                        } else {
-                            secondPlayer.playerNickname = messageFromPlayer.substring(6);
-                        }
+                        resolveNickname(messageFromPlayer);
                     }
-                    if (meFirst()) {
-                        System.out.println("ОТ ПЕРВОГО ИГРОКА ПОЛУЧЕНО: " + messageFromPlayer);
-                        secondPlayer.sendMessage(messageFromPlayer);
-                    } else {
-                        System.out.println("ОТ ВТОРОГО ИГРОКА ПОЛУЧЕНО: " + messageFromPlayer);
-                        firstPlayer.sendMessage(messageFromPlayer);
-                    }
-
-
                 }
-                if(firstPlayer.playerNickname != null && secondPlayer.playerNickname != null && !isGameStarted){
+                lock.lock();
+                if(isGameReadyForStart()){
                     gameService.startGame(firstPlayer.getIp(), secondPlayer.getIp(), firstPlayer.getPlayerNickname(), secondPlayer.getPlayerNickname());
                     isGameStarted = true;
                 }
+                lock.unlock();
             }
+        }
+
+        private boolean isGameReadyForStart() {
+            return firstPlayer.playerNickname != null && secondPlayer.playerNickname != null && !isGameStarted;
+        }
+
+        private void resolveNickname(String message) {
+            if(meFirst()){
+                recordNickname(message, firstPlayer, "ИМЯ ПЕРВОГО ИГРОКА: ", secondPlayer);
+            } else {
+                recordNickname(message, secondPlayer, "ИМЯ ВТОРОГО ИГРОКА: ", firstPlayer);
+            }
+        }
+
+        private void recordNickname(String nickname, PlayerThread currentPlayer, String anotherMessagePrefix, PlayerThread anotherPlayer) {
+            currentPlayer.playerNickname = nickname.substring(6);
+            System.out.println(anotherMessagePrefix + nickname);
+            anotherPlayer.sendMessage(nickname);
         }
 
         public void sendMessage(String message) {

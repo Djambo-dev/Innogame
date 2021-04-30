@@ -76,6 +76,7 @@ public class Main {
         }
         StatisticDto statistic = gameService.finishGame(gameId);
         System.out.println(statistic);
+
         first = scanner.nextLine();
         second = scanner.nextLine();
         gameId = gameService.startGame("127.0.0.1", "127.0.0.2", first, second);
@@ -123,6 +124,6 @@ public class Main {
         }
         statistic = gameService.finishGame(gameId);
         System.out.println(statistic);
-        int x = 100;
+
     }
 }
