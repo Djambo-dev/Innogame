@@ -96,6 +96,10 @@ public class GameServer {
                        gameService.finishGame(gameId, (System.currentTimeMillis() - startTimeMills) / 1000);
                        isGameInProcess = false;
                        lock.unlock();
+                    } else if(isMessageForMove(messageFromPlayer)){
+                        resolveMove(messageFromPlayer);
+                    } else if(isMessageForShot(messageFromPlayer)){
+                        resolveShot(messageFromPlayer);
                     }
                 }
                 lock.lock();
@@ -106,6 +110,30 @@ public class GameServer {
                 }
                 lock.unlock();
             }
+        }
+
+        private void resolveShot(String messageFromPlayer) {
+            if(meFirst()){
+                secondPlayer.sendMessage(messageFromPlayer);
+            } else {
+                firstPlayer.sendMessage(messageFromPlayer);
+            }
+        }
+
+        private boolean isMessageForShot(String messageFromPlayer) {
+            return messageFromPlayer.equals("shot");
+        }
+
+        private void resolveMove(String messageFromPlayer) {
+            if(meFirst()){
+                secondPlayer.sendMessage(messageFromPlayer);
+            } else {
+                firstPlayer.sendMessage(messageFromPlayer);
+            }
+        }
+
+        private boolean isMessageForMove(String messageFromClient){
+            return messageFromClient.equals("left") || messageFromClient.equals("right");
         }
 
         private boolean isMessageForExit(String messageFromPlayer) {

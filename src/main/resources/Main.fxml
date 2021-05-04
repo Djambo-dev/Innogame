@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Circle?>
+
+<AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.inno.game.clientapp.controllers.MainController">
+   <children>
+      <Circle fx:id="player" fill="DODGERBLUE" layoutX="250.0" layoutY="450.0" radius="20.0" stroke="BLACK" strokeType="INSIDE" />
+      <Separator layoutX="500.0" layoutY="-1.0" orientation="VERTICAL" prefHeight="500.0" prefWidth="1.0" />
+      <Circle fx:id="enemy" fill="#ff1f1f" layoutX="250.0" layoutY="50.0" radius="20.0" stroke="BLACK" strokeType="INSIDE" />
+      <Button fx:id="buttonConnect" layoutX="513.0" layoutY="15.0" mnemonicParsing="false" text="Подключение" />
+      <TextField fx:id="textPlayerName" disable="true" layoutX="500.0" layoutY="71.0" prefHeight="31.0" prefWidth="127.0" promptText="Имя" />
+      <Button fx:id="buttonGo" disable="true" layoutX="644.0" layoutY="71.0" mnemonicParsing="false" text="GO" />
+   </children>
+</AnchorPane>
