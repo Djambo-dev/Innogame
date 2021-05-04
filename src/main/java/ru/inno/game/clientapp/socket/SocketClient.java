@@ -39,7 +39,7 @@ public class SocketClient extends Thread {
                         case "left":
                             gameUtils.goLeft(mainController.getEnemy());
                             break;
-                        case ("right"):
+                        case "right":
                             gameUtils.goRight(mainController.getEnemy());
                             break;
                         case "shot":

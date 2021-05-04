@@ -14,7 +14,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-
+import static ru.inno.game.server.CommandsParser.*;
 @Data
 @AllArgsConstructor
 @Builder
@@ -100,6 +100,8 @@ public class GameServer {
                         resolveMove(messageFromPlayer);
                     } else if(isMessageForShot(messageFromPlayer)){
                         resolveShot(messageFromPlayer);
+                    } else if(isMessageForDamage(messageFromPlayer)){
+                        resolveDamage();
                     }
                 }
                 lock.lock();
@@ -112,6 +114,18 @@ public class GameServer {
             }
         }
 
+        private void resolveDamage() {
+            if(meFirst()){
+                gameService.shot(gameId, firstPlayer.playerNickname, secondPlayer.playerNickname);
+            } else {
+                gameService.shot(gameId, secondPlayer.playerNickname, firstPlayer.playerNickname);
+            }
+        }
+
+
+        private boolean isGameReadyForStart() {
+            return firstPlayer.playerNickname != null && secondPlayer.playerNickname != null && !isGameStarted;
+        }
         private void resolveShot(String messageFromPlayer) {
             if(meFirst()){
                 secondPlayer.sendMessage(messageFromPlayer);
@@ -119,11 +133,6 @@ public class GameServer {
                 firstPlayer.sendMessage(messageFromPlayer);
             }
         }
-
-        private boolean isMessageForShot(String messageFromPlayer) {
-            return messageFromPlayer.equals("shot");
-        }
-
         private void resolveMove(String messageFromPlayer) {
             if(meFirst()){
                 secondPlayer.sendMessage(messageFromPlayer);
@@ -131,23 +140,6 @@ public class GameServer {
                 firstPlayer.sendMessage(messageFromPlayer);
             }
         }
-
-        private boolean isMessageForMove(String messageFromClient){
-            return messageFromClient.equals("left") || messageFromClient.equals("right");
-        }
-
-        private boolean isMessageForExit(String messageFromPlayer) {
-            return messageFromPlayer.equals("exit");
-        }
-
-        private boolean isMessageForNickname(String messageFromPlayer) {
-            return messageFromPlayer.startsWith("name: ");
-        }
-
-        private boolean isGameReadyForStart() {
-            return firstPlayer.playerNickname != null && secondPlayer.playerNickname != null && !isGameStarted;
-        }
-
         private void resolveNickname(String message) {
             if(meFirst()){
                 recordNickname(message, firstPlayer, "ИМЯ ПЕРВОГО ИГРОКА: ", secondPlayer);
@@ -155,17 +147,14 @@ public class GameServer {
                 recordNickname(message, secondPlayer, "ИМЯ ВТОРОГО ИГРОКА: ", firstPlayer);
             }
         }
-
         private void recordNickname(String nickname, PlayerThread currentPlayer, String anotherMessagePrefix, PlayerThread anotherPlayer) {
             currentPlayer.playerNickname = nickname.substring(6);
             System.out.println(anotherMessagePrefix + nickname);
             anotherPlayer.sendMessage(nickname);
         }
-
         public void sendMessage(String message) {
             toPlayer.println(message);
         }
-
         private boolean meFirst() {
             return this == firstPlayer;
         }

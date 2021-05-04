@@ -6,6 +6,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -13,12 +14,13 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
+import lombok.Getter;
 import ru.inno.game.clientapp.socket.SocketClient;
 import ru.inno.game.clientapp.utils.GameUtils;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-
+@Getter
 public class MainController implements Initializable {
     private SocketClient socketClient;
 
@@ -27,9 +29,17 @@ public class MainController implements Initializable {
     }
 
     private GameUtils gameUtils;
+
+    public Circle getPlayer() {
+        return player;
+    }
+
     @FXML
     private Circle player;
-
+    @FXML
+    private Label hpPlayer;
+    @FXML
+    private Label hpEnemy;
 
 
     @FXML
@@ -77,6 +87,7 @@ public class MainController implements Initializable {
             buttonGo.setDisable(false);
             textPlayerName.setDisable(false);
             gameUtils.setPane(pane);
+            gameUtils.setSocketClient(socketClient);
         });
         buttonGo.setOnAction(event -> {
             socketClient.sendMessage("name: " + textPlayerName.getText());
@@ -84,5 +95,7 @@ public class MainController implements Initializable {
             textPlayerName.setDisable(true);
             buttonGo.getScene().getRoot().requestFocus();
         });
+        gameUtils.setMainController(this);
+
     }
 }
