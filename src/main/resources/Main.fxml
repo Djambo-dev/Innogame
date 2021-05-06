@@ -10,7 +10,7 @@
 <AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.inno.game.clientapp.controllers.MainController">
    <children>
       <Circle fx:id="player" fill="DODGERBLUE" layoutX="250.0" layoutY="450.0" radius="20.0" stroke="BLACK" strokeType="INSIDE" />
-      <Separator layoutX="500.0" layoutY="-1.0" orientation="VERTICAL" prefHeight="500.0" prefWidth="1.0" />
+      <Separator fx:id="rightFieldSeparator" layoutX="500.0" layoutY="-1.0" orientation="VERTICAL" prefHeight="500.0" prefWidth="1.0" />
       <Circle fx:id="enemy" fill="#ff1f1f" layoutX="250.0" layoutY="50.0" radius="20.0" stroke="BLACK" strokeType="INSIDE" />
       <Button fx:id="buttonConnect" layoutX="513.0" layoutY="15.0" mnemonicParsing="false" text="Подключение" />
       <TextField fx:id="textPlayerName" disable="true" layoutX="500.0" layoutY="71.0" prefHeight="31.0" prefWidth="127.0" promptText="Имя" />
@@ -19,5 +19,7 @@
       <Label fx:id="hpEnemy" layoutX="666.0" layoutY="133.0" text="100" />
       <Label layoutX="511.0" layoutY="112.0" text="Ваше здоровье:" />
       <Label layoutX="510.0" layoutY="133.0" text="Здоровье противника:" />
+      <Label fx:id="result" layoutX="511.0" layoutY="154.0" prefHeight="336.0" prefWidth="179.0" wrapText="true" />
+      <Separator fx:id="leftFieldSeparator" layoutY="-1.0" orientation="VERTICAL" prefHeight="500.0" prefWidth="1.0" />
    </children>
 </AnchorPane>

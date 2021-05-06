@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.inno.game.dto.StatisticDto;
 import ru.inno.game.services.GameService;
 
 import java.io.BufferedReader;
@@ -14,7 +15,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
 import static ru.inno.game.server.CommandsParser.*;
+
 @Data
 @AllArgsConstructor
 @Builder
@@ -29,9 +32,11 @@ public class GameServer {
     private boolean isGameStarted = false;
     private boolean isGameInProcess = true;
     private Lock lock = new ReentrantLock();
-    public GameServer(GameService gameService){
+
+    public GameServer(GameService gameService) {
         this.gameService = gameService;
     }
+
     public void start(int port) {
 
         try {
@@ -62,6 +67,7 @@ public class GameServer {
         playerThread.sendMessage("ВЫ ПОДКЛЮЧЕНЫ");
         return playerThread;
     }
+
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
@@ -70,6 +76,7 @@ public class GameServer {
         private BufferedReader fromPlayer;
         private String playerNickname;
         private String ip;
+
         public PlayerThread(Socket socketPlayer) {
             try {
                 this.toPlayer = new PrintWriter(socketPlayer.getOutputStream(), true);
@@ -79,6 +86,7 @@ public class GameServer {
                 throw new IllegalStateException(e);
             }
         }
+
         @Override
         public void run() {
             while (isGameInProcess) {
@@ -89,23 +97,25 @@ public class GameServer {
                     throw new IllegalStateException(e);
                 }
                 if (messageFromPlayer != null) {
-                    if(isMessageForNickname(messageFromPlayer)){
+                    if (isMessageForNickname(messageFromPlayer)) {
                         resolveNickname(messageFromPlayer);
-                    } else if(isMessageForExit(messageFromPlayer) && isGameInProcess){
-                       lock.lock();
-                       gameService.finishGame(gameId, (System.currentTimeMillis() - startTimeMills) / 1000);
-                       isGameInProcess = false;
-                       lock.unlock();
-                    } else if(isMessageForMove(messageFromPlayer)){
+                    } else if (isMessageForExit(messageFromPlayer) && isGameInProcess) {
+                        lock.lock();
+                        StatisticDto statisticDto = gameService.finishGame(gameId, (System.currentTimeMillis() - startTimeMills) / 1000);
+                        firstPlayer.sendMessage(statisticDto.toString());
+                        secondPlayer.sendMessage(statisticDto.toString());
+                        isGameInProcess = false;
+                        lock.unlock();
+                    } else if (isMessageForMove(messageFromPlayer)) {
                         resolveMove(messageFromPlayer);
-                    } else if(isMessageForShot(messageFromPlayer)){
+                    } else if (isMessageForShot(messageFromPlayer)) {
                         resolveShot(messageFromPlayer);
-                    } else if(isMessageForDamage(messageFromPlayer)){
+                    } else if (isMessageForDamage(messageFromPlayer)) {
                         resolveDamage();
                     }
                 }
                 lock.lock();
-                if(isGameReadyForStart()){
+                if (isGameReadyForStart()) {
                     gameId = gameService.startGame(firstPlayer.getIp(), secondPlayer.getIp(), firstPlayer.getPlayerNickname(), secondPlayer.getPlayerNickname());
                     startTimeMills = System.currentTimeMillis();
                     isGameStarted = true;
@@ -115,7 +125,7 @@ public class GameServer {
         }
 
         private void resolveDamage() {
-            if(meFirst()){
+            if (meFirst()) {
                 gameService.shot(gameId, firstPlayer.playerNickname, secondPlayer.playerNickname);
             } else {
                 gameService.shot(gameId, secondPlayer.playerNickname, firstPlayer.playerNickname);
@@ -126,35 +136,41 @@ public class GameServer {
         private boolean isGameReadyForStart() {
             return firstPlayer.playerNickname != null && secondPlayer.playerNickname != null && !isGameStarted;
         }
+
         private void resolveShot(String messageFromPlayer) {
-            if(meFirst()){
+            if (meFirst()) {
                 secondPlayer.sendMessage(messageFromPlayer);
             } else {
                 firstPlayer.sendMessage(messageFromPlayer);
             }
         }
+
         private void resolveMove(String messageFromPlayer) {
-            if(meFirst()){
+            if (meFirst()) {
                 secondPlayer.sendMessage(messageFromPlayer);
             } else {
                 firstPlayer.sendMessage(messageFromPlayer);
             }
         }
+
         private void resolveNickname(String message) {
-            if(meFirst()){
+            if (meFirst()) {
                 recordNickname(message, firstPlayer, "ИМЯ ПЕРВОГО ИГРОКА: ", secondPlayer);
             } else {
                 recordNickname(message, secondPlayer, "ИМЯ ВТОРОГО ИГРОКА: ", firstPlayer);
             }
         }
+
         private void recordNickname(String nickname, PlayerThread currentPlayer, String anotherMessagePrefix, PlayerThread anotherPlayer) {
             currentPlayer.playerNickname = nickname.substring(6);
             System.out.println(anotherMessagePrefix + nickname);
             anotherPlayer.sendMessage(nickname);
         }
+
         public void sendMessage(String message) {
             toPlayer.println(message);
         }
+
         private boolean meFirst() {
             return this == firstPlayer;
         }

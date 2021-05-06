@@ -1,6 +1,7 @@
 package ru.inno.game.clientapp.socket;
 
 import javafx.application.Platform;
+import javafx.scene.control.Label;
 import ru.inno.game.clientapp.controllers.MainController;
 import ru.inno.game.clientapp.utils.GameUtils;
 
@@ -16,10 +17,11 @@ public class SocketClient extends Thread {
     private BufferedReader fromServer;
     private MainController mainController;
     private GameUtils gameUtils;
-    public SocketClient(MainController mainController, String host, int port){
+
+    public SocketClient(MainController mainController, String host, int port) {
         try {
-            socket= new Socket(host, port);
-            toServer = new PrintWriter(socket.getOutputStream(),true);
+            socket = new Socket(host, port);
+            toServer = new PrintWriter(socket.getOutputStream(), true);
             fromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             this.mainController = mainController;
             this.gameUtils = mainController.getGameUtils();
@@ -27,14 +29,21 @@ public class SocketClient extends Thread {
             throw new IllegalStateException(e);
         }
     }
-    @Override
-    public void run(){
 
-        while (true){
+    @Override
+    public void run() {
+
+        while (true) {
             String messageFromServer;
+            if (Integer.parseInt(mainController.getHpPlayer().getText()) <= 0 || Integer.parseInt(mainController.getHpEnemy().getText()) <= 0) {
+                sendMessage("exit");
+            }
             try {
                 messageFromServer = fromServer.readLine();
-                if(messageFromServer != null){
+                if (messageFromServer.startsWith("Игра с")) {
+                    Platform.runLater(() -> mainController.getResult().setText(messageFromServer));
+                } else {
+
                     switch (messageFromServer) {
                         case "left":
                             gameUtils.goLeft(mainController.getEnemy());
@@ -46,13 +55,16 @@ public class SocketClient extends Thread {
                             Platform.runLater(() -> gameUtils.createBulletFor(mainController.getEnemy(), true));
                             break;
                     }
+
                 }
-            } catch (IOException e){
+            } catch (IOException e) {
                 throw new IllegalStateException(e);
             }
+
         }
     }
-    public void sendMessage(String message){
+
+    public void sendMessage(String message) {
         toServer.println(message);
     }
 }

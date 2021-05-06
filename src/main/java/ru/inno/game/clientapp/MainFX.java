@@ -17,7 +17,6 @@ public class MainFX extends Application {
         String fxmlFileName = "/Main.fxml";
         FXMLLoader loader = new FXMLLoader();
         Parent root = loader.load(getClass().getResourceAsStream(fxmlFileName));
-      // Parent root = FXMLLoader.load(getClass().getResource("/Main.fxml"));
         primaryStage.setTitle("Game client");
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);

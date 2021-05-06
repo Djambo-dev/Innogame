@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -15,24 +16,22 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import lombok.Getter;
+import lombok.Setter;
 import ru.inno.game.clientapp.socket.SocketClient;
 import ru.inno.game.clientapp.utils.GameUtils;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 @Getter
+@Setter
 public class MainController implements Initializable {
     private SocketClient socketClient;
 
-    public GameUtils getGameUtils() {
-        return gameUtils;
-    }
+
 
     private GameUtils gameUtils;
 
-    public Circle getPlayer() {
-        return player;
-    }
+
 
     @FXML
     private Circle player;
@@ -52,6 +51,12 @@ public class MainController implements Initializable {
     private TextField textPlayerName;
     @FXML
     private AnchorPane pane;
+    @FXML
+    private Label result;
+    @FXML
+    private Separator rightFieldSeparator;
+    @FXML
+    private Separator leftFieldSeparator;
 
     public EventHandler<KeyEvent> getKeyEventEventHandler() {
         return keyEventEventHandler;
@@ -59,6 +64,7 @@ public class MainController implements Initializable {
 
     private EventHandler<KeyEvent> keyEventEventHandler = event -> {
         if (event.getCode() == KeyCode.RIGHT) {
+
             gameUtils.goRight(player);
             socketClient.sendMessage("right");
         } else if ((event.getCode() == KeyCode.LEFT)) {
@@ -94,6 +100,7 @@ public class MainController implements Initializable {
             buttonGo.setDisable(true);
             textPlayerName.setDisable(true);
             buttonGo.getScene().getRoot().requestFocus();
+
         });
         gameUtils.setMainController(this);
 

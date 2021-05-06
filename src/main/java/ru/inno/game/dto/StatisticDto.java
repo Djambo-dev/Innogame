@@ -28,10 +28,16 @@ public class StatisticDto {
     @Override
     public String toString() {
         return
-                "Игра с ID = " + gameId + "\n" +
-                        "Игрок 1: " + firstPlayerNickname + ", попаданий - " + shotsCountFromFirst + ", всего очков - " + firstPlayerScore + "\n" +
-                        "Игрок 2: " + secondPlayerNickname + ", попаданий - " + shotsCountFromSecond + ", всего очков - " + secondPlayerScore + "\n" +
-                        "Победа: " + playerWinner + "\n" +
+                "Игра с ID = " + gameId + " " +
+                        "Игрок 1: " + firstPlayerNickname + ", попаданий - " + shotsCountFromFirst + ", всего очков - " + firstPlayerScore + " " +
+                        "Игрок 2: " + secondPlayerNickname + ", попаданий - " + shotsCountFromSecond + ", всего очков - " + secondPlayerScore + " " +
+                        "Победа: " + playerWinner + " " +
                         "Игра длилась: " + gameTimeInSeconds + " секунд";
     }
 }
+/*
+"Игра с ID = " + gameId + "\n" +
+        "Игрок 1: " + firstPlayerNickname + ", попаданий - " + shotsCountFromFirst + ", всего очков - " + firstPlayerScore + "\n" +
+        "Игрок 2: " + secondPlayerNickname + ", попаданий - " + shotsCountFromSecond + ", всего очков - " + secondPlayerScore + "\n" +
+        "Победа: " + playerWinner + "\n" +
+        "Игра длилась: " + gameTimeInSeconds + " секунд";*/
