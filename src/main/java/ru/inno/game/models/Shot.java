@@ -14,7 +14,7 @@ public class Shot {
 
     private Long id;
     private LocalDateTime shotTime;
-    //private boolean isHit;
+    private boolean isHit;
     private Game game;
     private Player shooter;
     private Player target;
